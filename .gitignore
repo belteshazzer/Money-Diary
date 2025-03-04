@@ -1,0 +1,66 @@
+# Visual Studio
+.vs/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Auto-generated files
+GeneratedFiles/
+
+# Build results
+bin/
+obj/
+out/
+
+# Logs and database
+*.log
+logs/
+
+# ASP.NET Core environment files
+appsettings.Development.json
+secrets.json
+.env
+
+# Package dependencies
+node_modules/
+packages/
+
+# Temporary files
+*.tmp
+*.cache
+*.pdb
+*.swp
+
+# Rider & JetBrains
+.idea/
+*.sln.iml
+
+# Docker
+**/Dockerfile
+**/docker-compose*
+**/*.tar
+
+# Publish output
+wwwroot/
+publish/
+
+# Azure DevOps
+.azure-pipelines/
+
+# Entity Framework Migrations
+Migrations/
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Coverage and test results
+coverage/
+TestResults/
+
+# Others
+.DS_Store
+Thumbs.db
