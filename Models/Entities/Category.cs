@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using BudgetTracker.Models.Entities;
+using MoneyDiary.Common;
+using MoneyDiary.Models.Entities;
 
 namespace MoneyDiary.Models.Entities;
 
-public partial class Category
+public partial class Category : ISoftDeletable
 {
     public int Id { get; set; }
 
@@ -16,7 +17,7 @@ public partial class Category
 
     public DateTime? UpdatedAt { get; set; }
 
-    public bool? IsDeleted { get; set; }
+    public bool? IsDeleted { get; set; } 
 
     public string? History { get; set; }
 

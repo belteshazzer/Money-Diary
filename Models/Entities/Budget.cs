@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using MoneyDiary.Common;
 using MoneyDiary.Models.Entities;
 
-namespace BudgetTracker.Models.Entities;
+namespace MoneyDiary.Models.Entities;
 
-public partial class Budget
+public partial class Budget : ISoftDeletable
 {
     public Guid Id { get; set; }
 
@@ -13,7 +14,7 @@ public partial class Budget
     public int CategoryId { get; set; }
 
     public decimal Amount { get; set; }
-
+    public string Currency { get; set; }
     public string? Period { get; set; }
 
     public DateOnly StartDate { get; set; }

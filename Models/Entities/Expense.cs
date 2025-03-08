@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using MoneyDiary.Common;
 
 namespace MoneyDiary.Models.Entities;
 
-public partial class Expense
+public partial class Expense : ISoftDeletable
 {
     public Guid Id { get; set; }
 
@@ -12,7 +13,7 @@ public partial class Expense
     public int? CategoryId { get; set; }
 
     public decimal Amount { get; set; }
-
+    public string Currency { get; set; }
     public string? Description { get; set; }
 
     public DateTime TransactionDate { get; set; }

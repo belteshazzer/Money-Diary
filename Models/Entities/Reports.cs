@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using MoneyDiary.Common;
 using MoneyDiary.Models.Entities;
 
 namespace MoneyDiary.Models.Entities;
 
-public partial class Report
+public partial class Report : ISoftDeletable
 {
     public Guid Id { get; set; }
 

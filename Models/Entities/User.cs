@@ -1,11 +1,10 @@
 
-
-using BudgetTracker.Models.Entities;
 using Microsoft.AspNetCore.Identity;
+using MoneyDiary.Common;
 
 namespace MoneyDiary.Models.Entities
 {
-    public class User : IdentityUser
+    public class User : IdentityUser, ISoftDeletable
     {
         public required string FirstName { get; set; }
         public string? LastName { get; set; }

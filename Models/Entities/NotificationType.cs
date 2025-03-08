@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using MoneyDiary.Common;
 
 namespace MoneyDiary.Models.Entities;
 
-public partial class NotificationType
+public partial class NotificationType : ISoftDeletable
 {
     public int Id { get; set; }
 
-    public string Type { get; set; } = null!;
+    public string Title { get; set; } = null!;
 
     public string? Message { get; set; }
 

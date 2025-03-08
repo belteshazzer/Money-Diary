@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
+using MoneyDiary.Common;
 
 namespace MoneyDiary.Models.Entities;
 
-public partial class Income
+public partial class Income : ISoftDeletable
 {
     public Guid Id { get; set; }
 
     public string UserId { get; set; }
 
     public decimal Amount { get; set; }
+    public string Currency { get; set; }
 
     public string? IncomeSource { get; set; }
 

@@ -1,0 +1,1 @@
+dotnet ef dbcontext scaffolding "Name=DbConnection" Microsoft.EntityFrameworkCore.SqlServer -o Models/Entities --context-dir Data -c MoneyDiaryDbContext --force
