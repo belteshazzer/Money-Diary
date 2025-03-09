@@ -1,4 +1,5 @@
 
+using System.Security.Claims;
 using AutoMapper;
 using MoneyDiary.Models.Dtos;
 using MoneyDiary.Models.Entities;
@@ -11,17 +12,22 @@ namespace MoneyDiary.Services.ExpenseService
     {
         private readonly IGenericRepository<Expense> _incomeRepository;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<ExpenseService> _logger;
 
-        public ExpenseService(IGenericRepository<Expense> incomeRepository, IMapper mapper)
+        public ExpenseService(IGenericRepository<Expense> incomeRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, ILogger<ExpenseService> logger)
         {
             _incomeRepository = incomeRepository;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
+
 
         public async Task<Expense> CreateExpenseAsync(ExpenseDto expenseDto)
         {
             var expense = _mapper.Map<Expense>(expenseDto);
-
+            expense.UserId = GetUserId();
             await _incomeRepository.InsertAsync(expense);
             return expense;
         }
@@ -55,6 +61,27 @@ namespace MoneyDiary.Services.ExpenseService
         public async Task<Expense> GetExpenseByIdAsync(Guid id)
         {
             return await _incomeRepository.GetByIdAsync(id);
+        }
+        public string GetUserId()
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext == null)
+            {
+                _logger.LogWarning("You must be authenticated first to create an expense. Please login and try again.");
+                return null;
+            }
+
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                _logger.LogWarning("Your cookies have been removed. Please login again and try again.");
+            }
+            else
+            {
+                _logger.LogInformation($"User ID found: {userId}");
+            }
+
+            return userId;
         }
     }
 }

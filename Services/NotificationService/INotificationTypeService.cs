@@ -5,6 +5,7 @@ namespace MoneyDiary.Services.NotificationService
 {
     public interface INotificationTypeService
     {
+        Task<IEnumerable<NotificationType>> GetAllNotificationTypesAsync();
         Task<NotificationType> GetNotificationTypeByIdAsync(Guid id);
         Task<NotificationType> GetNotificationTypeByTitleAsync(string title);
         Task<NotificationType> CreateNotificationTypeAsync(NotificationTypeDto notificationType);

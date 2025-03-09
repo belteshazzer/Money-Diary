@@ -33,6 +33,8 @@ public partial class Budget : ISoftDeletable
 
     public string? History { get; set; }
 
+    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
     public virtual Category Category { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;

@@ -26,6 +26,15 @@ namespace MoneyDiary.Services.NotificationService
             await _notificationRepository.DeleteAsync(id);
         }
 
+        public async Task DeleteAllNotificationsAsync(string userId)
+        {
+            var notifications = await _notificationRepository.GetByConditionAsync(x => x.UserId == userId);
+            foreach (var notification in notifications)
+            {
+                await DeleteNotificationAsync(notification.Id);
+            }
+        }
+
         public async Task<IEnumerable<Notification>> GetNotificationsAsync(string userId)
         {
             return await _notificationRepository.GetByConditionAsync(x => x.UserId == userId);
@@ -36,12 +45,13 @@ namespace MoneyDiary.Services.NotificationService
             return await _notificationRepository.GetByIdAsync(id);
         }
 
-        public async Task<Notification> CreateNotificationAsync(string userId, int notificationId)
+        public async Task<Notification> CreateNotificationAsync(string userId, int notificationId, Guid? budgetId)
         {
             var notification = new Notification
             {
                 UserId = userId,
-                NotificationId = notificationId,
+                BudgetId = budgetId,
+                NotificationTypeId = notificationId,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -49,10 +59,10 @@ namespace MoneyDiary.Services.NotificationService
             return notification;
         }
 
-        public async Task SendNotificationAsync(string userId, string notificationTitle)
+        public async Task SendNotificationAsync(string userId, string notificationTitle, Guid? budgetId)
         {
             var notificationType = await _notificationTypeService.GetNotificationTypeByTitleAsync(notificationTitle);
-            var notification = await CreateNotificationAsync(userId, notificationType.Id);
+            var notification = await CreateNotificationAsync(userId, notificationType.Id, budgetId);
 
             await _hubContext.Clients.User(userId).SendAsync("RecieveNotification", notification);
         }

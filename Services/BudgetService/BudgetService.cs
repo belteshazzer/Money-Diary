@@ -3,6 +3,7 @@ using MoneyDiary.Models.Dtos;
 using MoneyDiary.Models.Entities;
 using MoneyDiary.Repositories;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace MoneyDiary.Services.BudgetService
 {
@@ -10,11 +11,13 @@ namespace MoneyDiary.Services.BudgetService
     {
         private readonly IGenericRepository<Budget> _budgetRepository;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public BudgetService(IGenericRepository<Budget> budgetRepository, IMapper mapper)
+        public BudgetService(IGenericRepository<Budget> budgetRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _budgetRepository = budgetRepository;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Budget> GetBudgetByIdAsync(Guid Id)
@@ -29,7 +32,9 @@ namespace MoneyDiary.Services.BudgetService
 
         public async Task<Budget> CreateBudgetAsync(BudgetDto budgetDto)
         {
+            var httpContext = _httpContextAccessor.HttpContext ?? throw new InvalidOperationException("you must be authenticated first to create a budget, please login and try again");
             var budget = _mapper.Map<Budget>(budgetDto);
+            budget.UserId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new InvalidOperationException("your Cookies have been removed, please login again and try again");
             await _budgetRepository.InsertAsync(budget);
             return budget;
         }

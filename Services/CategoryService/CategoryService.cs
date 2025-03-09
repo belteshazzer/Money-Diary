@@ -15,12 +15,12 @@ namespace MoneyDiary.Services.CategoryService
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
+
         }
 
         public async Task<Category> CreateCategoryAsync(CategoryDto categoryDto)
         {
             var category = _mapper.Map<Category>(categoryDto);
-
             await _categoryRepository.InsertAsync(category);
             return category;
         }

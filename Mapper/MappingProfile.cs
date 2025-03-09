@@ -19,6 +19,12 @@ namespace MoneyDiary.Mapper
             CreateMap<Expense, ExpenseHistoryDto>().ReverseMap();
             
             CreateMap<Budget, BudgetDto>().ReverseMap();
+            CreateMap<Budget, BudgetHistoryDto>().ReverseMap();
+
+            CreateMap<Notification, NotificationDto>().ReverseMap();
+
+            CreateMap<NotificationType, NotificationTypeDto>().ReverseMap();
+            
         }
     }
 }

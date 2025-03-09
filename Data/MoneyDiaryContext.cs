@@ -90,9 +90,12 @@ namespace MoneyDiary.Data
                 .WithMany(u => u.Notifications)
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
+                entity.HasOne(e => e.Budget)
+                .WithMany(b => b.Notifications)
+                .HasForeignKey(e => e.BudgetId);
                 entity.HasOne(e => e.NotificationType)
                 .WithMany(nt => nt.Notifications)
-                .HasForeignKey(e => e.NotificationId);
+                .HasForeignKey(e => e.NotificationTypeId);
             });
 
             builder.Entity<Report>(entity => 

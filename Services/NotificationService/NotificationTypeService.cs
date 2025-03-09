@@ -15,6 +15,10 @@ namespace MoneyDiary.Services.NotificationService
             _notificationTypeRepository = notificationRepository;
             _mapper = mapper;
         }
+        public async Task<IEnumerable<NotificationType>> GetAllNotificationTypesAsync()
+        {
+            return await _notificationTypeRepository.GetAllAsync();
+        }
 
         public async Task<NotificationType> GetNotificationTypeByIdAsync(Guid id)
         {

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using MoneyDiary.Data;
 using MoneyDiary.Mapper;
 using MoneyDiary.Middleware;
@@ -10,6 +11,9 @@ using MoneyDiary.Services.CategoryService;
 using MoneyDiary.Services.EmailService;
 using MoneyDiary.Services.ExpenseService;
 using MoneyDiary.Services.IncomeService;
+using MoneyDiary.Services.NotificationService;
+using MoneyDiary.Services.UserContextService;
+using MoneyDiary.Services.AuthService;
 using Org.BouncyCastle.Asn1.X509.Qualified;
 // using Serilog;
 
@@ -35,6 +39,12 @@ builder.Services.AddScoped<IIncomeService, IncomeService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<INotificationTypeService, NotificationTypeService>();
+builder.Services.AddScoped<NotificationHub>();
+builder.Services.AddHostedService<NotificationBackgroundService>();
+builder.Services.AddScoped<IUserContextService, UserContextService>();
+builder.Services.AddSingleton<IUserTrackingService, UserTrackingService>();
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
@@ -56,6 +66,10 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+app.MapHub<NotificationHub>("/notificationHub");
+
 app.Run();

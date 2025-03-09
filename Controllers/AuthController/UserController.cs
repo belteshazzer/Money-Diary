@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MoneyDiary.Models.Dtos.AuthDto;
 using MoneyDiary.Models.Entities;
+using MoneyDiary.Services.AuthService;
 using MoneyDiary.Services.EmailService;
 using System.Net;
 using System.Text.Encodings.Web;
@@ -21,14 +22,16 @@ namespace MoneyDiary.Controllers.AuthController
         private readonly SignInManager<User> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<UserController> _logger;
+        private readonly IUserTrackingService _userTrackingService;
 
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailSender emailSender, ILogger<UserController> logger)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailSender emailSender, ILogger<UserController> logger, IUserTrackingService userTrackingService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _userTrackingService = userTrackingService;
         }
 
         [AllowAnonymous]
@@ -112,6 +115,13 @@ namespace MoneyDiary.Controllers.AuthController
 
             if (result.Succeeded)
             {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                var userId = await _userManager.GetUserIdAsync(user);
+                _logger.LogInformation($"User logged in successfully with ID: {userId}");
+
+                // Register the user in the tracking service
+                _userTrackingService.AddUser(userId);
+
                 return Ok(new { Message = "User logged in successfully" });
             }
 
@@ -127,6 +137,8 @@ namespace MoneyDiary.Controllers.AuthController
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+            var userId = _userManager.GetUserId(User);
+            _userTrackingService.RemoveUser(userId);
             return Ok(new { Message = "User logged out successfully" });
         }
 
